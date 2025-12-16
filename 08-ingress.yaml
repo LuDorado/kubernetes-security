@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: docker-security-ingress
   namespace: docker-security
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - host: docker-security.local
     http:
@@ -17,4 +16,10 @@ spec:
             name: frontend-service
             port:
               number: 80
-              
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api
+            port:
+              number: 8000

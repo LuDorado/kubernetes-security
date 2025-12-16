@@ -13,6 +13,7 @@ spec:
       labels:
         app: api
     spec:
+      serviceAccountName: app-service-account
       containers:
       - name: api
         image: loudeepurple/docker-security-api:3
@@ -21,11 +22,20 @@ spec:
           runAsUser: 1000
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
               - ALL
         ports:
         - containerPort: 8000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
         env:
         - name: DB_HOST
           valueFrom:

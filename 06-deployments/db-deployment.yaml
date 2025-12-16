@@ -13,6 +13,7 @@ spec:
       labels:
         app: db
     spec:
+      serviceAccountName: app-service-account
       containers:
       - name: db
         image: loudeepurple/docker-security-db:3
@@ -28,6 +29,8 @@ spec:
           runAsUser: 1000
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
           capabilities:
             drop:
               - ALL
@@ -38,12 +41,14 @@ spec:
           mountPath: /var/run/postgresql
         - name: postgres-tmp
           mountPath: /tmp
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
         env:
         - name: POSTGRES_USER
           valueFrom:
             configMapKeyRef:
               name: app-config
-              key: POSTGRES_USER
+              key: DB_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -53,15 +58,13 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: app-config
-              key: POSTGRES_DB
+              key: DB_NAME
         livenessProbe:
           exec:
             command:
-            - pg_isready
-            - -U
-            - app
-            - -d
-            - appdb
+            - sh
+            - -c
+            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
@@ -69,11 +72,9 @@ spec:
         readinessProbe:
           exec:
             command:
-            - pg_isready
-            - -U
-            - app
-            - -d
-            - appdb
+            - sh
+            - -c
+            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
           initialDelaySeconds: 5
           periodSeconds: 5
           timeoutSeconds: 3
@@ -83,3 +84,6 @@ spec:
         emptyDir: {}
       - name: postgres-tmp
         emptyDir: {}
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-data-pvc
