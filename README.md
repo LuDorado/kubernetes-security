@@ -33,7 +33,7 @@ Secure containerized application deployment with hardened security configuration
 ### 1. Create namespace and RBAC
 ```bash
 kubectl apply -f 01-namespace.yaml
-kubectl apply -f 02-rbac.yaml
+kubectl apply -f 02-rbac/
 ```
 
 ### 2. Create secrets and configmaps
@@ -68,7 +68,7 @@ kubectl apply -f 07-services/frontend-service.yaml
 ### 7. Create ingress and security policies
 ```bash
 kubectl apply -f 08-ingress.yaml
-kubectl apply -f 09-network-policies.yaml
+kubectl apply -f 09-network-policies/
 kubectl apply -f 10-pod-security.yaml
 ```
 
