@@ -85,34 +85,12 @@ kubectl logs -n docker-security deployment/db-deployment
 
 ### Web Access
 ```bash
-# Option 1: Using NodePort (check the port from services)
-kubectl get services -n docker-security
-# Access: http://<NODE_IP>:32382
-
-# Option 2: Using minikube
+# Option 1: Using minikube
 minikube service frontend-service -n docker-security --url
 
-# Option 3: Port forwarding
+# Option 2: Port forwarding
 kubectl port-forward -n docker-security service/frontend-service 8080:80
 # Access: http://localhost:8080
-
-# Option 4: Using Ingress (add to /etc/hosts)
-echo "$(minikube ip) docker-security.local" | sudo tee -a /etc/hosts
-# Access: http://docker-security.local
-```
-
-### Health Checks
-```bash
-# Check API health
-kubectl port-forward -n docker-security service/api-service 8000:8000
-curl http://localhost:8000/health
-
-# Check database connectivity
-kubectl exec -n docker-security deployment/db-deployment -- pg_isready -U app -d appdb
-
-# Check pod health status
-kubectl get pods -n docker-security -o wide
-kubectl describe pods -n docker-security
 ```
 
 ## Troubleshooting
