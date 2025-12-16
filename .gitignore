@@ -1,0 +1,37 @@
+# Kubernetes
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+
+# Secrets and sensitive files
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+secrets/
+.env
+.env.local
+
+# Helm
+charts/*/charts/
+charts/*/requirements.lock
+.helm/
+
+# Kustomize
+kustomization.yaml.bak
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: docker-security
+data:
+  DB_HOST: "db-service"
+  DB_USER: "app"
+  DB_NAME: "appdb"
+  JWT_EXPIRE_MINUTES: "30"
